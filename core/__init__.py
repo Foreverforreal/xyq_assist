@@ -28,3 +28,4 @@ def compute_screen_scale_rate():
 
 
 screen_scale_rate = compute_screen_scale_rate()
+menu_list = ['activities', 'mission', 'team']

@@ -31,7 +31,8 @@ def get_cursor_pos():
 
 
 def get_xyq_handle():
-    wd_name = u'梦幻西游 - 星云引擎'
+    # wd_name = u'梦幻西游 - 星云引擎'
+    wd_name = u'test.txt - 记事本'
     return win32gui.FindWindow(0, wd_name)  # 获取窗口句柄
 
 
