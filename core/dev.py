@@ -1,4 +1,5 @@
-from pynput import mouse
+from pynput import mouse, keyboard
+from pynput.keyboard import Key, KeyCode
 
 from core.util import *
 
@@ -17,17 +18,29 @@ def on_click(x, y, button, pressed):
         # Stop listener
         return False
 
+def on_press(key):
+    # 监听按键
+    print('{0} pressed'.format(key))
+
+def on_release(key):
+    # 监听释放
+    print('{0} release'.format(key))
+    if key == Key.esc:
+        # Stop listener
+        return False
+
 
 def on_scroll(x, y, dx, dy):
     print('Scrolled {0} at {1}'.format('down' if dy < 0 else 'up', (x, y)))
 
 
-def compute_relative_pos(x, y, button, pressed):
-    l, t, r, b = get_window_rect(handle)
-    print('相对窗口x坐标: ' + str(x - l))
-    print('相对窗口y坐标: ' + str(y - t))
-    if not pressed:
-        return False
+def compute_relative_pos(key: KeyCode):
+    if hasattr(key, 'char') and 'd' == key.char:
+        x, y = get_cursor_pos()
+        l, t, r, b = get_window_rect(handle)
+
+        print('相对窗口x坐标: ' + str(x - l))
+        print('相对窗口y坐标: ' + str(y - t))
 
 
 if __name__ == '__main__':
@@ -37,8 +50,16 @@ if __name__ == '__main__':
     #     on_scroll=on_scroll)
     # listener.start()
 
-    with mouse.Listener(
-            on_move=on_move,
-            on_click=compute_relative_pos,
-            on_scroll=on_scroll) as listener:
+    # with mouse.Listener(
+    #     # on_move= on_move,
+    #         on_click=compute_relative_pos,
+    #         on_scroll=on_scroll) as listener:
+    #     listener.join()
+
+    # 连接事件以及释放
+    with keyboard.Listener(
+            on_press=compute_relative_pos,
+            # on_release=on_release
+    ) as listener:
         listener.join()
+

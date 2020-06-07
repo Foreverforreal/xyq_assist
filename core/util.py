@@ -26,10 +26,8 @@ def move_click(x, y, t=0):  # 移动鼠标并点击左键
 
 
 def get_cursor_pos():
-    while True:
-        (x, y) = win32api.GetCursorPos()
-        print('x: {}   y:{}'.format(x, y))
-        time.sleep(0.7)
+    return win32api.GetCursorPos()
+
 
 
 def get_xyq_handle():
