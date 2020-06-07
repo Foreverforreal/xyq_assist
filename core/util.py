@@ -33,7 +33,7 @@ def get_cursor_pos():
 
 
 def get_xyq_handle():
-    wd_name = u'test.txt - 记事本'
+    wd_name = u'梦幻西游 - 星云引擎'
     return win32gui.FindWindow(0, wd_name)  # 获取窗口句柄
 
 
@@ -65,8 +65,7 @@ def screen_cut():
     rect = real_rect(rect)
     print(rect)
     image: ImageGrab.Image = ImageGrab.grab(rect)
-    image.save(open(r"C:\Users\zhu\Desktop\a.jpg", 'w'))
-
+    image.save(open(r"C:\Users\49948\Desktop\a.jpg", 'w'))
 
 if __name__ == '__main__':
     screen_cut()
