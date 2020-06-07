@@ -1,5 +1,5 @@
 import sys
-from random import random
+import random
 
 import win32api
 import time
@@ -16,8 +16,11 @@ debug = True
 
 def move_click(x, y, t=0):  # 移动鼠标并点击左键
     win32api.SetCursorPos((x, y))  # 设置鼠标位置(x, y)
-    win32api.mouse_event(win32con.MOUSEEVENTF_LEFTDOWN |
-                         win32con.MOUSEEVENTF_LEFTUP, x, y, 0, 0)  # 点击鼠标左键
+    win32api.mouse_event(win32con.MOUSEEVENTF_LEFTDOWN | win32con.MOUSEEVENTF_LEFTUP, x, y, 0, 0)  # 点击鼠标左键
+    time.sleep(random.random() * 2 + 1)  # sleep一下
+
+    win32api.mouse_event(win32con.MOUSEEVENTF_LEFTDOWN | win32con.MOUSEEVENTF_LEFTUP, x, y, 0, 0)  # 点击鼠标左键
+
     if t == 0:
         time.sleep(random.random() * 2 + 1)  # sleep一下
     else:
@@ -28,18 +31,14 @@ def move_click(x, y, t=0):  # 移动鼠标并点击左键
 def get_cursor_pos():
     return win32api.GetCursorPos()
 
-
-
 def get_xyq_handle():
-    # wd_name = u'梦幻西游 - 星云引擎'
-    wd_name = u'test.txt - 记事本'
+    wd_name = u'梦幻西游 - 星云引擎'
+    # wd_name = u'test.txt - 记事本'
     return win32gui.FindWindow(0, wd_name)  # 获取窗口句柄
 
 
 def get_window_rect(handle):  # 获取阴阳师窗口信息
     if handle == 0:
-        # text.insert('end', '小轩提示：请打开PC端阴阳师\n')
-        # text.see('end')  # 自动显示底部
         return None
     else:
         (left, top, right, bottom) = win32gui.GetWindowRect(handle)
