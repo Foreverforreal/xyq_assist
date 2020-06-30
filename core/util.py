@@ -1,18 +1,14 @@
-import sys
 import random
-
-import win32api
 import time
 
+import win32api
 import win32con
 import win32gui
-import win32print
 from PIL import ImageGrab
 
-from core import screen_scale_rate
+from core import screen_scale_rate, xyq_handle
 
 debug = True
-
 
 def move_click(x, y, t=0):  # 移动鼠标并点击左键
     win32api.SetCursorPos((x, y))  # 设置鼠标位置(x, y)
@@ -31,10 +27,12 @@ def move_click(x, y, t=0):  # 移动鼠标并点击左键
 def get_cursor_pos():
     return win32api.GetCursorPos()
 
-def get_xyq_handle():
-    wd_name = u'梦幻西游 - 星云引擎'
-    # wd_name = u'test.txt - 记事本'
-    return win32gui.FindWindow(0, wd_name)  # 获取窗口句柄
+
+def focus_on_wd(wd_handle):
+    win32gui.ShowWindow(wd_handle, win32con.SW_NORMAL)
+    win32gui.SetActiveWindow(wd_handle)
+    win32gui.SetForegroundWindow(wd_handle)
+    time.sleep(0.2)
 
 
 def get_window_rect(handle):  # 获取阴阳师窗口信息
@@ -48,9 +46,8 @@ def get_window_rect(handle):  # 获取阴阳师窗口信息
 
 
 def test_wd_rect():
-    handle = get_xyq_handle()
     while True:
-        get_window_rect(handle)
+        get_window_rect(xyq_handle)
         time.sleep(1)
 
 
@@ -58,13 +55,32 @@ def real_rect(rect: tuple):
     return (int(i * screen_scale_rate) for i in rect)
 
 
-def screen_cut():
-    rect = get_window_rect(get_xyq_handle())
+def screen_cut(wd_handle):
+    focus_on_wd(wd_handle)
+
+    rect = get_window_rect(wd_handle)
     rect = real_rect(rect)
     print(rect)
     image: ImageGrab.Image = ImageGrab.grab(rect)
-    image.save(open(r"C:\Users\49948\Desktop\a.jpg", 'w'))
+    with open(r"C:\Users\49948\Desktop\a.jpg", 'w') as file:
+        image.save(file)
+
+
+def click_menu(handle, menu: str):
+    focus_on_wd(handle)
+
+    rect = get_window_rect(handle)
+    with open('../menu.txt', 'r') as file:
+        while (m := file.readline()) != '':
+            if m.startswith(menu):
+                coord = m[len(menu) + 1:].replace('\n', '')
+                x, y = coord.split(' ')
+                click_x = rect[0] + int(x)
+                click_y = rect[1] + int(y)
+                print('click position: {} {}'.format(click_x, click_y))
+
+                move_click(click_x, click_y)
+
 
 if __name__ == '__main__':
-    screen_cut()
-
+    screen_cut(xyq_handle)

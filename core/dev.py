@@ -1,7 +1,9 @@
+import json
+
 from pynput import mouse, keyboard
 from pynput.keyboard import Key, KeyCode
 
-from core import menu_list
+from core import menu_list, get_xyq_handle
 from core.util import *
 
 handle = get_xyq_handle()
@@ -42,6 +44,11 @@ i = 0
 
 def compute_relative_pos(key: KeyCode):
     global i
+
+    menu_dict = {}
+    with open('../menu.json', 'r') as file:
+        menu_dict = json.load(file)
+
     if hasattr(key, 'char'):
         if 'd' == key.char:
             x, y = get_cursor_pos()
@@ -53,50 +60,35 @@ def compute_relative_pos(key: KeyCode):
             offset_y = str(y - t)
             print('相对窗口x坐标: ' + str(x - l))
             print('相对窗口y坐标: ' + str(y - t))
-            with open('../menu.txt', 'a') as file:
-                file.write("{}:{} {}".format(menu_list[i], offset_x, offset_y))
-                file.write('\n')
+
+            menu_dict[menu_list[i]] = {'offset_x': offset_x, 'offset_y': offset_y}
+
+            with open('../menu.json', 'a') as file:
+                json.dump(menu_dict, file)
                 i = i + 1
         elif 'f' == key.char:
             x, y = get_cursor_pos()
             print((x, y))
 
 
-def click_menu(menu: str):
-    win32gui.ShowWindow(handle,win32con.SW_NORMAL)
-    win32gui.SetActiveWindow(handle)
-    win32gui.SetForegroundWindow(handle)
 
-    time.sleep(0.4)
-
-    rect = get_window_rect(handle)
-    with open('../menu.txt', 'r') as file:
-        while (m := file.readline()) != '':
-            if m.startswith(menu):
-                coord = m[len(menu) + 1:].replace('\n', '')
-                x, y = coord.split(' ')
-                click_x = rect[0] + int(x)
-                click_y = rect[1] + int(y)
-                print('click position: {} {}'.format(click_x, click_y))
-
-                move_click(click_x, click_y)
 
 
 def log_menu_pos():
-    with open('../menu.txt', 'w') as file:
-        pass
     with keyboard.Listener(
             on_press=compute_relative_pos,
             # on_release=on_release
     ) as listener:
         listener.join()
 
+
 if __name__ == '__main__':
-    # listener = mouse.Listener(
-    #     on_move=on_move,
-    #     on_click=on_click,
-    #     on_scroll=on_scroll)
-    # listener.start()
+    listener = mouse.Listener(
+        on_move=on_move,
+        on_click=on_click,
+        on_scroll=on_scroll)
+    listener.start()
+    listener.join()
 
     # with mouse.Listener(
     #     # on_move= on_move,
@@ -106,4 +98,4 @@ if __name__ == '__main__':
 
     # 连接事件以及释放ddd
     # log_menu_pos()
-    click_menu('team')
+    # click_menu('team')
