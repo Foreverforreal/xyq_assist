@@ -29,7 +29,8 @@ def execute(socket, data):
     instruct = mes.split('&&')
 
     for l in instruct:
-        execute_action(l)
+        if l != '':
+            execute_action(l)
 
 
 if __name__ == '__main__':
