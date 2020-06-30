@@ -98,4 +98,4 @@ if __name__ == '__main__':
 
     # 连接事件以及释放ddd
     # log_menu_pos()
-    # click_menu('team')
+    click_menu('team')

@@ -11,8 +11,9 @@ def execute_action(instruct):
         position = [int(p) for p in d.split(',')]
         win32api.SetCursorPos(position)  # 设置鼠标位置(x, y)
     elif action == 'p':
-        win32api.keybd_event(int(d), 0, 0, 0)
-        win32api.keybd_event(int(d), 0, win32con.KEYEVENTF_KEYUP, 0)
+        win32api.keybd_event(VK_CODE[d], 0, 0, 0)
+    elif action == 'r':
+        win32api.keybd_event(VK_CODE[d], 0, win32con.KEYEVENTF_KEYUP, 0)
     elif action == 'c':
         [x, y, button, pressed] = d.split(',')
         x = int(x)
