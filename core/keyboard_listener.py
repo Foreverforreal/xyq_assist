@@ -10,9 +10,6 @@ def print_on_press(key):
 def print_on_release(key):
     # 监听释放
     print('{0} release'.format(key))
-    if key == Key.esc:
-        # Stop listener
-        return False
 
 
 class KeyboardListener:
