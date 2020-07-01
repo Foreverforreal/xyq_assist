@@ -5,11 +5,18 @@ from pynput.keyboard import Key
 def print_on_press(key):
     # 监听按键
     print('{0} pressed'.format(key))
+    if hasattr(key, 'vk'):
+        print('vk_code: {}'.format(key.vk))
+    if hasattr(key, 'name'):
+        print('name: {}'.format(key.name))
+    print('*' * 10)
+
 
 
 def print_on_release(key):
     # 监听释放
-    print('{0} release'.format(key))
+    # print('{0} release'.format(key))
+    pass
 
 
 class KeyboardListener:
